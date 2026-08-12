@@ -4,7 +4,7 @@ local E, L, V, P, G = unpack(ElvUI)
 local DT = E:GetModule("DataTexts")
 
 addon.name = addonName
-addon.version = "1.1.10"
+addon.version = "1.1.11"
 addon.E = E
 addon.DT = DT
 addon.sources = {}
@@ -12,6 +12,17 @@ addon.communitySources = {}
 addon.debug = false
 addon.initialized = false
 addon.initialClubsLoaded = false
+
+local function RegisterElvUIPlugin()
+    if addon.elvUIPluginRegistered then return end
+
+    local plugins = E.Libs and E.Libs.EP
+    if not plugins or type(plugins.RegisterPlugin) ~= "function" then return end
+
+    local version = C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(addonName, "Version")
+    plugins:RegisterPlugin(addonName, nil, false, version)
+    addon.elvUIPluginRegistered = true
+end
 
 local format = string.format
 local floor = math.floor
@@ -531,6 +542,7 @@ local function InitializeSources()
     if addon.initialized then return end
 
     addon.initialized = true
+    RegisterElvUIPlugin()
     addon:InitializeDatabase()
     if addon.RegisterGuildDataText then
         addon:RegisterGuildDataText()

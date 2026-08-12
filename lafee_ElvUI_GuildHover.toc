@@ -2,7 +2,7 @@
 ## Title: Lafee ElvUI Guild Hover
 ## Notes: Interactive ElvUI datatexts for contacts, guild and community members.
 ## Author: Lafee
-## Version: 1.1.10
+## Version: 1.1.11
 ## SavedVariables: LafeeElvUIGuildHoverDB
 ## RequiredDeps: ElvUI
 
