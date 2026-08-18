@@ -151,7 +151,7 @@ local function CreateCommunitySource(clubInfo)
     local clubType = GetSafeMemberField(clubInfo, "clubType")
     local clubName = GetSafeMemberField(clubInfo, "name")
     local isBattleNet = GetSafeMemberField(clubInfo, "isBattleNet")
-    local key = "lafee_Community_" .. tostring(clubId)
+    local key = addon:GetCharacterDataTextKey("lafee_Community", clubId)
     local source = {
         key = key,
         clubId = clubId,
