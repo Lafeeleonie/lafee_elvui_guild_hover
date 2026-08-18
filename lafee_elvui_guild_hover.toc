@@ -1,7 +1,16 @@
 ## Interface: 120007, 120100
 ## Title: Lafee ElvUI Guild Hover
 ## Notes: Interactive ElvUI datatexts for contacts, guild and community members.
+## Notes-deDE: Interaktive ElvUI-Datentexte für Kontakte, Gilde und Community-Mitglieder.
+## Notes-esES: Textos de datos interactivos de ElvUI para contactos, hermandad y miembros de comunidades.
+## Notes-esMX: Textos de datos interactivos de ElvUI para contactos, hermandad y miembros de comunidades.
 ## Notes-frFR: Textes de données ElvUI interactifs pour les contacts, la guilde et les communautés.
+## Notes-itIT: Testi dati interattivi di ElvUI per contatti, gilda e membri delle comunità.
+## Notes-koKR: 연락처, 길드 및 커뮤니티 멤버를 위한 대화형 ElvUI 데이터텍스트입니다.
+## Notes-ptBR: Textos de dados interativos do ElvUI para contatos, guilda e membros de comunidades.
+## Notes-ruRU: Интерактивные тексты данных ElvUI для контактов, гильдии и участников сообществ.
+## Notes-zhCN: 用于联系人、公会和社区成员的交互式 ElvUI 数据文本。
+## Notes-zhTW: 用於聯絡人、公會與社群成員的互動式 ElvUI 資料文字。
 ## Author: Lafee
 ## Version: 1.1.12
 ## SavedVariablesPerCharacter: LafeeElvUIGuildHoverDB
