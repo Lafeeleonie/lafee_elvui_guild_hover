@@ -68,16 +68,9 @@ function addon:RegisterGuildDataText()
     if guildSource then return end
 
     guildSource = {
-<<<<<<< HEAD
-        -- Keep the internal key stable so existing ElvUI profiles retain their assignment.
-        key = "Guilde interactive",
+        key = addon:GetCharacterDataTextKey("lafee_Guild"),
         listName = T.GUILD_INTERACTIVE,
         displayName = T.GUILD,
-=======
-        key = addon:GetCharacterDataTextKey("lafee_Guild"),
-        listName = "Guilde interactive",
-        displayName = "Guilde",
->>>>>>> origin/main
         isGuild = true,
         members = {},
         RefreshMembers = function(source)
