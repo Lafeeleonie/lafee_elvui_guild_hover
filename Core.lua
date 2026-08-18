@@ -1,10 +1,11 @@
 local addonName, addon = ...
+local DISPLAY_NAME = "Lafee ElvUI Guild Hover"
 
 local E, L, V, P, G = unpack(ElvUI)
 local DT = E:GetModule("DataTexts")
 
 addon.name = addonName
-addon.version = "1.1.10"
+addon.version = "1.1.12"
 addon.E = E
 addon.DT = DT
 addon.sources = {}
@@ -12,6 +13,17 @@ addon.communitySources = {}
 addon.debug = false
 addon.initialized = false
 addon.initialClubsLoaded = false
+
+local function RegisterElvUIPlugin()
+    if addon.elvUIPluginRegistered then return end
+
+    local plugins = E.Libs and E.Libs.EP
+    if not plugins or type(plugins.RegisterPlugin) ~= "function" then return end
+
+    local version = C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata(addonName, "Version")
+    plugins:RegisterPlugin(addonName, nil, false, version)
+    addon.elvUIPluginRegistered = true
+end
 
 local format = string.format
 local floor = math.floor
@@ -59,6 +71,28 @@ local REFRESH_EVENTS = {
 }
 local SUPPORTED_REFRESH_EVENTS = {}
 
+local function GetCharacterKey()
+    local guid = UnitGUID and UnitGUID("player")
+    if guid and guid ~= "" then return guid end
+
+    local name, realm
+    if UnitFullName then
+        name, realm = UnitFullName("player")
+    elseif UnitName then
+        name, realm = UnitName("player")
+    end
+    realm = realm or (GetNormalizedRealmName and GetNormalizedRealmName()) or "UnknownRealm"
+    return ((name or "UnknownPlayer") .. "-" .. realm):gsub("[^%w_-]", "_")
+end
+
+addon.characterKey = GetCharacterKey()
+
+function addon:GetCharacterDataTextKey(namespace, suffix)
+    local key = namespace .. "_" .. self.characterKey
+    if suffix ~= nil then key = key .. "_" .. tostring(suffix) end
+    return key
+end
+
 local function IsSafeValue(value)
     if type(issecretvalue) == "function" and issecretvalue(value) then
         return false
@@ -79,7 +113,7 @@ local function GroupContains(fullName)
 end
 
 function addon:Print(message)
-    E:Print(format("|cff4da6ff%s|r : %s", addonName, message))
+    E:Print(format("|cff4da6ff%s|r : %s", DISPLAY_NAME, message))
 end
 
 function addon:Debug(message)
@@ -531,6 +565,7 @@ local function InitializeSources()
     if addon.initialized then return end
 
     addon.initialized = true
+    RegisterElvUIPlugin()
     addon:InitializeDatabase()
     if addon.RegisterGuildDataText then
         addon:RegisterGuildDataText()

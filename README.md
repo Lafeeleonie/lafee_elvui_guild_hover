@@ -1,5 +1,18 @@
 # Lafee ElvUI Guild Hover
 
+## Important after updating to 1.1.12
+
+Version 1.1.12 isolates guild, contacts, and community datatexts by character. Existing ElvUI assignments use the old shared identifiers and cannot be migrated automatically.
+
+After installing the update:
+
+1. Restart the game or type `/reload`.
+2. Log in to each character and open ElvUI with `/ec`.
+3. Open **Datatexts** and reselect **Guilde interactive**, **Contacts interactifs**, and the communities used by that character.
+4. Repeat this once for every character.
+
+ElvUI panel placement still belongs to the active ElvUI profile. Characters that need different datatext layouts must use separate ElvUI profiles.
+
 Lafee ElvUI Guild Hover is a World of Warcraft Retail extension for ElvUI. It adds interactive datatexts that show online contacts and members from your guild and each of your WoW communities.
 
 Hover a datatext to open a clickable member list: left-click a member to whisper them, or right-click to invite their active WoW character.
@@ -16,7 +29,9 @@ This addon does not modify any ElvUI files.
 - A dedicated **Guilde interactive** datatext for your guild.
 - A dedicated **Contacts interactifs** datatext for WoW and Battle.net friends.
 - One separate datatext for every subscribed WoW community.
-- Community datatext IDs are stable and based on the community `clubId`, so duplicate or renamed community names are handled safely.
+- Guild, contacts, and community datatext IDs are isolated by character GUID.
+- Community caches are saved per character, so characters never restore each other's subscriptions.
+- Community datatext IDs also include the community `clubId`, so duplicate or renamed community names are handled safely.
 - Online member count displayed directly on every datatext.
 - Interactive, ElvUI-styled member list instead of a static tooltip.
 - Compact member rows with level and class-colored name.
@@ -33,7 +48,7 @@ This addon does not modify any ElvUI files.
 ## Installing
 
 1. Download and extract the archive.
-2. Place the `lafee_ElvUI_GuildHover` folder in:
+2. Place the `lafee_elvui_guild_hover` folder in:
    `World of Warcraft/_retail_/Interface/AddOns/`
 3. Start the game or type `/reload`.
 
@@ -46,6 +61,8 @@ This addon does not modify any ElvUI files.
 5. Select a community by its exact community name for its own roster.
 
 Each community is registered as a separate ElvUI datatext and appears in the normal datatext selection list.
+
+Datatext registrations are unique to each character. After upgrading, select the guild, contacts, and community datatexts once on every character. ElvUI panel placement still follows the active ElvUI profile; use separate ElvUI profiles when characters need different panel layouts.
 
 ## Member List Actions
 
