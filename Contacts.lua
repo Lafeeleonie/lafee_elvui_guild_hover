@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local T = addon.Locale or {}
 
 local BNET_CLIENT_WOW = BNET_CLIENT_WOW or "WoW"
 local CURRENT_WOW_PROJECT = WOW_PROJECT_ID
@@ -21,9 +22,9 @@ local function GetClassFile(className)
 end
 
 local function ContactStatus(isAFK, isDND, fallback)
-    if isAFK then return "Absent" end
-    if isDND then return "Occupé" end
-    return fallback or "En ligne"
+    if isAFK then return T.AWAY end
+    if isDND then return T.BUSY end
+    return fallback or T.ONLINE
 end
 
 local function GetFullCharacterName(gameInfo, battleTag)
@@ -110,7 +111,7 @@ local function AddBattleNetContacts(members)
             local accountName = IsSafeValue(accountInfo.accountName) and accountInfo.accountName or nil
             local displayName = fullName or accountName or (IsSafeValue(accountInfo.battleTag) and accountInfo.battleTag) or "Battle.net"
             local isMobile = not fullName and gameInfo and (gameInfo.clientProgram == "App" or gameInfo.clientProgram == "BSAp")
-            local statusFallback = fullName and "En ligne" or (isMobile and "Mobile" or "Battle.net")
+            local statusFallback = fullName and T.ONLINE or (isMobile and T.MOBILE or "Battle.net")
 
             members[#members + 1] = {
                 id = accountInfo.bnetAccountID or friendIndex,
@@ -151,9 +152,10 @@ function addon:RegisterContactsDataText()
     if contactsSource then return end
 
     contactsSource = {
+        -- Keep the internal key stable so existing ElvUI profiles retain their assignment.
         key = "Contacts interactifs",
-        listName = "Contacts interactifs",
-        displayName = "Contacts",
+        listName = T.CONTACTS_INTERACTIVE,
+        displayName = T.CONTACTS,
         members = {},
         RefreshMembers = function(source)
             source.members = BuildContacts()
