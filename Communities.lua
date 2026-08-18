@@ -1,5 +1,6 @@
 local addonName, addon = ...
 local DT = addon.DT
+local T = addon.Locale or {}
 
 local CLUB_TYPE_GUILD = Enum and Enum.ClubType and Enum.ClubType.Guild
 local CLUB_TYPE_BNET = Enum and Enum.ClubType and Enum.ClubType.BattleNet
@@ -38,13 +39,13 @@ end
 
 local function PresenceLabel(presence, isMobile)
     if presence == PRESENCE.Away then
-        return isMobile and "Mobile — absent" or "Absent"
+        return isMobile and T.MOBILE_AWAY or T.AWAY
     elseif presence == PRESENCE.Busy then
-        return isMobile and "Mobile — occupé" or "Occupé"
+        return isMobile and T.MOBILE_BUSY or T.BUSY
     elseif presence == PRESENCE.OnlineMobile or isMobile then
-        return "Mobile"
+        return T.MOBILE
     end
-    return "En ligne"
+    return T.ONLINE
 end
 
 local function GetCharacterName(guid, name, characterName, realmName)
@@ -154,7 +155,7 @@ local function CreateCommunitySource(clubInfo)
     local source = {
         key = key,
         clubId = clubId,
-        displayName = clubName or ("Communauté " .. tostring(clubId)),
+        displayName = clubName or ((T.COMMUNITY_PREFIX or "Community ") .. tostring(clubId)),
         isBattleNet = isBattleNet == true or clubType == CLUB_TYPE_BNET,
         members = {},
         RefreshMembers = function(self)
@@ -243,7 +244,7 @@ function addon:DiscoverCommunities(initial)
     end
 
     if not initial and removed then
-        self:Print("les communautés ont changé, utilisez /reload.")
+        self:Print(T.COMMUNITIES_CHANGED)
     elseif added and DT.Initialized and DT.UpdateQuickDT then
         DT:UpdateQuickDT()
     end
