@@ -1,4 +1,5 @@
 local addonName, addon = ...
+local T = addon.Locale or {}
 
 local GUILD_REQUEST_INTERVAL = 15
 local guildSource
@@ -6,13 +7,13 @@ local lastGuildRosterRequest
 
 local function GuildStatus(status, isMobile)
     if isMobile then
-        if status == 1 then return "Mobile — absent" end
-        if status == 2 then return "Mobile — occupé" end
-        return "Mobile"
+        if status == 1 then return T.MOBILE_AWAY end
+        if status == 2 then return T.MOBILE_BUSY end
+        return T.MOBILE
     end
-    if status == 1 then return "Absent" end
-    if status == 2 then return "Occupé" end
-    return "En ligne"
+    if status == 1 then return T.AWAY end
+    if status == 2 then return T.BUSY end
+    return T.ONLINE
 end
 
 local function RequestGuildRoster()
@@ -42,7 +43,7 @@ local function BuildGuildMembers()
                 fullName = fullName,
                 level = level,
                 classFile = classFile,
-                zone = zone or (isMobile and "Mobile" or ""),
+                zone = zone or (isMobile and T.MOBILE or ""),
                 status = GuildStatus(status, isMobile),
                 isMobile = isMobile and true or false,
                 isSelf = isSelf and true or false,
@@ -67,9 +68,10 @@ function addon:RegisterGuildDataText()
     if guildSource then return end
 
     guildSource = {
+        -- Keep the internal key stable so existing ElvUI profiles retain their assignment.
         key = "Guilde interactive",
-        listName = "Guilde interactive",
-        displayName = "Guilde",
+        listName = T.GUILD_INTERACTIVE,
+        displayName = T.GUILD,
         isGuild = true,
         members = {},
         RefreshMembers = function(source)
