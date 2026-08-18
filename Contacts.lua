@@ -152,16 +152,9 @@ function addon:RegisterContactsDataText()
     if contactsSource then return end
 
     contactsSource = {
-<<<<<<< HEAD
-        -- Keep the internal key stable so existing ElvUI profiles retain their assignment.
-        key = "Contacts interactifs",
+        key = addon:GetCharacterDataTextKey("lafee_Contacts"),
         listName = T.CONTACTS_INTERACTIVE,
         displayName = T.CONTACTS,
-=======
-        key = addon:GetCharacterDataTextKey("lafee_Contacts"),
-        listName = "Contacts interactifs",
-        displayName = "Contacts",
->>>>>>> origin/main
         members = {},
         RefreshMembers = function(source)
             source.members = BuildContacts()
