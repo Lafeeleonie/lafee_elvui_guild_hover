@@ -2,6 +2,7 @@ local addonName, addon = ...
 
 local E, L, V, P, G = unpack(ElvUI)
 local DT = E:GetModule("DataTexts")
+local T = addon.Locale or {}
 
 addon.name = addonName
 addon.version = "1.1.10"
@@ -110,7 +111,7 @@ end
 
 function addon:WhisperMember(member)
     if not member or not member.canWhisper then
-        self:Print("Chuchotement indisponible pour ce membre.")
+        self:Print(T.WHISPER_UNAVAILABLE_MEMBER)
         return
     end
 
@@ -119,7 +120,7 @@ function addon:WhisperMember(member)
         if sendBNetTell then
             sendBNetTell(member.bnetAccountName)
         else
-            self:Print("Chuchotement Battle.net indisponible.")
+            self:Print(T.BNET_WHISPER_UNAVAILABLE)
         end
         return
     end
@@ -129,17 +130,17 @@ function addon:WhisperMember(member)
     elseif ChatFrame_SendTell then
         ChatFrame_SendTell(member.fullName)
     else
-        self:Print("Chuchotement indisponible.")
+        self:Print(T.WHISPER_UNAVAILABLE)
     end
 end
 
 function addon:InviteMember(member)
     if not member or not member.canInvite then
-        self:Print("Invitation indisponible pour ce membre.")
+        self:Print(T.INVITE_UNAVAILABLE_MEMBER)
         return
     end
     if InCombatLockdown() then
-        self:Print("Invitation différée : action indisponible en combat.")
+        self:Print(T.INVITE_COMBAT)
         return
     end
 
@@ -168,7 +169,7 @@ function addon:CreatePopup()
 
     popup.empty = popup:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     popup.empty:SetPoint("TOPLEFT", popup.title, "BOTTOMLEFT", 0, -8)
-    popup.empty:SetText("Aucun membre connecté.")
+    popup.empty:SetText(T.NO_ONLINE_MEMBER)
 
     popup.scroll = CreateFrame("ScrollFrame", nil, popup, "UIPanelScrollFrameTemplate")
     popup.scroll:SetPoint("TOPLEFT", popup.title, "BOTTOMLEFT", 0, -6)
@@ -180,7 +181,7 @@ function addon:CreatePopup()
 
     popup.legend = popup:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     popup.legend:SetPoint("BOTTOMLEFT", POPUP_PADDING, 8)
-    popup.legend:SetText("Clic gauche : chuchoter    Clic droit : inviter")
+    popup.legend:SetText(T.POPUP_LEGEND)
 
     popup.rows = {}
     popup:SetScript("OnEnter", function()
@@ -243,7 +244,7 @@ function addon:UpdateRow(row, member)
     row.member = member
     local classColor = ClassColor(member.classFile)
     row.level:SetText(member.level and tostring(member.level) or "--")
-    row.name:SetText((member.isFavorite and "|TInterface\\COMMON\\FavoritesIcon:12:12:0:0|t " or "") .. (member.name or "Inconnu"))
+    row.name:SetText((member.isFavorite and "|TInterface\\COMMON\\FavoritesIcon:12:12:0:0|t " or "") .. (member.name or T.UNKNOWN))
     if member.nameColor then
         row.name:SetTextColor(member.nameColor.r, member.nameColor.g, member.nameColor.b)
     elseif classColor then
@@ -290,7 +291,7 @@ function addon:RenderPopup(source, owner)
 
     popup.source = source
     popup.owner = owner
-    popup.title:SetText(format("%s : %d connecté(s)", source.displayName, #members))
+    popup.title:SetText(format(T.ONLINE_COUNT, source.displayName, #members))
     popup.empty:SetShown(#members == 0)
     popup.scroll:SetShown(#members > 0)
     popup.content:SetHeight(contentHeight)
@@ -326,7 +327,7 @@ end
 function addon:OpenSourceWindow(source)
     if not source then return end
     if InCombatLockdown() then
-        self:Print("Ouverture indisponible en combat.")
+        self:Print(T.OPEN_COMBAT)
         return
     end
 
@@ -344,7 +345,7 @@ function addon:OpenSourceWindow(source)
         if source.isGuild and ToggleGuildFrame then
             SecureCall(ToggleGuildFrame)
         elseif source.isGuild then
-            self:Print("Fenêtre de guilde indisponible.")
+            self:Print(T.GUILD_WINDOW_UNAVAILABLE)
         end
         return
     end
@@ -354,7 +355,7 @@ function addon:OpenSourceWindow(source)
         local toggleFrame = source.isGuild and ToggleGuildFrame or ToggleCommunitiesFrame
         toggleFrame = toggleFrame or ToggleCommunitiesFrame or ToggleGuildFrame
         if not toggleFrame then
-            self:Print("Fenêtre des communautés indisponible.")
+            self:Print(T.COMMUNITIES_WINDOW_UNAVAILABLE)
             return
         end
         SecureCall(toggleFrame)
@@ -419,7 +420,7 @@ function addon:ScheduleRefresh(reason)
     local generation = self.refreshGeneration
     C_Timer.After(0.35, function()
         if generation ~= addon.refreshGeneration then return end
-        addon:Debug("Rafraîchissement : " .. (reason or "événement"))
+        addon:Debug(format(T.DEBUG_REFRESH, reason or T.DEBUG_EVENT))
         if addon.DiscoverCommunities then
             addon:DiscoverCommunities(false)
         end
@@ -523,7 +524,7 @@ for _, event in ipairs(REFRESH_EVENTS) do
     if registered then
         tinsert(SUPPORTED_REFRESH_EVENTS, event)
     else
-        addon:Debug("Événement indisponible ignoré : " .. event)
+        addon:Debug(format(T.DEBUG_EVENT_UNAVAILABLE, event))
     end
 end
 
@@ -580,16 +581,16 @@ SlashCmdList.LAFEEELVUIGUILDHOVER = function(message)
     if command == "refresh" then
         if addon.DiscoverCommunities then addon:DiscoverCommunities(false) end
         addon:RefreshAll()
-        addon:Print("Rafraîchissement demandé.")
+        addon:Print(T.REFRESH_REQUESTED)
     elseif command == "debug" then
         addon.debug = not addon.debug
-        addon:Print("Mode debug " .. (addon.debug and "activé." or "désactivé."))
+        addon:Print(addon.debug and T.DEBUG_ENABLED or T.DEBUG_DISABLED)
     else
         local count = 0
         for _, source in pairs(addon.communitySources) do
             if not source.removed then count = count + 1 end
         end
-        addon:Print(format("version %s — %d datatext(s) communautaire(s) enregistré(s).", addon.version, count))
-        addon:Print("Commandes : /lgh refresh, /lgh debug")
+        addon:Print(format(T.VERSION_STATUS, addon.version, count))
+        addon:Print(T.COMMANDS)
     end
 end
