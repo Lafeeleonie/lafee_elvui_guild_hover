@@ -67,7 +67,7 @@ function addon:RegisterGuildDataText()
     if guildSource then return end
 
     guildSource = {
-        key = "Guilde interactive",
+        key = addon:GetCharacterDataTextKey("lafee_Guild"),
         listName = "Guilde interactive",
         displayName = "Guilde",
         isGuild = true,

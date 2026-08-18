@@ -1,10 +1,11 @@
 local addonName, addon = ...
+local DISPLAY_NAME = "Lafee ElvUI Guild Hover"
 
 local E, L, V, P, G = unpack(ElvUI)
 local DT = E:GetModule("DataTexts")
 
 addon.name = addonName
-addon.version = "1.1.11"
+addon.version = "1.1.12"
 addon.E = E
 addon.DT = DT
 addon.sources = {}
@@ -70,6 +71,28 @@ local REFRESH_EVENTS = {
 }
 local SUPPORTED_REFRESH_EVENTS = {}
 
+local function GetCharacterKey()
+    local guid = UnitGUID and UnitGUID("player")
+    if guid and guid ~= "" then return guid end
+
+    local name, realm
+    if UnitFullName then
+        name, realm = UnitFullName("player")
+    elseif UnitName then
+        name, realm = UnitName("player")
+    end
+    realm = realm or (GetNormalizedRealmName and GetNormalizedRealmName()) or "UnknownRealm"
+    return ((name or "UnknownPlayer") .. "-" .. realm):gsub("[^%w_-]", "_")
+end
+
+addon.characterKey = GetCharacterKey()
+
+function addon:GetCharacterDataTextKey(namespace, suffix)
+    local key = namespace .. "_" .. self.characterKey
+    if suffix ~= nil then key = key .. "_" .. tostring(suffix) end
+    return key
+end
+
 local function IsSafeValue(value)
     if type(issecretvalue) == "function" and issecretvalue(value) then
         return false
@@ -90,7 +113,7 @@ local function GroupContains(fullName)
 end
 
 function addon:Print(message)
-    E:Print(format("|cff4da6ff%s|r : %s", addonName, message))
+    E:Print(format("|cff4da6ff%s|r : %s", DISPLAY_NAME, message))
 end
 
 function addon:Debug(message)

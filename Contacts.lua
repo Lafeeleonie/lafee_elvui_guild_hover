@@ -151,7 +151,7 @@ function addon:RegisterContactsDataText()
     if contactsSource then return end
 
     contactsSource = {
-        key = "Contacts interactifs",
+        key = addon:GetCharacterDataTextKey("lafee_Contacts"),
         listName = "Contacts interactifs",
         displayName = "Contacts",
         members = {},
